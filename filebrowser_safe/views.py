@@ -103,10 +103,7 @@ def browse(request):
 
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0}
-    counter = {}
-    for k, v in EXTENSIONS.items():
-        counter[k] = 0
-
+    counter = {k: 0 for k, v in EXTENSIONS.items()}
     dir_list, file_list = default_storage.listdir(abs_path)
     files = []
     for file in dir_list + file_list:
@@ -140,7 +137,7 @@ def browse(request):
                     results_var['images_total'] += 1
                 if fileobject.filetype != 'Folder':
                     results_var['delete_total'] += 1
-                elif fileobject.filetype == 'Folder' and fileobject.is_empty:
+                elif fileobject.is_empty:
                     results_var['delete_total'] += 1
                 if query.get('type') and query.get('type') in SELECT_FORMATS and fileobject.filetype in SELECT_FORMATS[query.get('type')]:
                     results_var['select_total'] += 1
@@ -296,9 +293,10 @@ def _check_file(request):
     fileArray = {}
     if request.method == 'POST':
         for k, v in list(request.POST.items()):
-            if k != "folder":
-                if default_storage.exists(os.path.join(get_directory(), folder, v)):
-                    fileArray[k] = v
+            if k != "folder" and default_storage.exists(
+                os.path.join(get_directory(), folder, v)
+            ):
+                fileArray[k] = v
     return HttpResponse(dumps(fileArray))
 
 

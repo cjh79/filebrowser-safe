@@ -29,17 +29,14 @@ class FileBrowseWidget(Input):
         self.directory = attrs.get('directory', '')
         self.extensions = attrs.get('extensions', '')
         self.format = attrs.get('format', '')
-        if attrs is not None:
-            self.attrs = attrs.copy()
-        else:
-            self.attrs = {}
+        self.attrs = attrs.copy() if attrs is not None else {}
 
     def render(self, name, value, attrs=None):
         if value is None:
             value = ""
         directory = self.directory
-        if self.directory:
-            if callable(self.directory):
+        if directory:
+            if callable(directory):
                 directory = self.directory()
             directory = os.path.normpath(datetime.datetime.now().strftime(directory))
             fullpath = os.path.join(get_directory(), directory)
@@ -77,7 +74,7 @@ class FileBrowseFormField(forms.CharField):
         if value == '':
             return value
         file_extension = os.path.splitext(value)[1].lower().split("?")[0]
-        if self.extensions and not file_extension in self.extensions:
+        if self.extensions and file_extension not in self.extensions:
             raise forms.ValidationError(self.error_messages['extension'] % {'ext': file_extension, 'allowed': ", ".join(self.extensions)})
         return value
 

@@ -73,10 +73,7 @@ def url_join(*args):
     """
     URL join routine.
     """
-    if args[0].startswith("http://"):
-        url = "http://"
-    else:
-        url = "/"
+    url = "http://" if args[0].startswith("http://") else "/"
     for arg in args:
         arg = str(arg).replace("\\", "/")
         arg_split = arg.split("/")
@@ -211,11 +208,7 @@ def convert_filename(value):
             v = re.sub(r'[^\w\s-]', '', v).strip()
             normalized.append(v)
 
-        if len(normalized) > 1:
-            value = '.'.join(normalized)
-        else:
-            value = normalized[0]
-
+        value = '.'.join(normalized) if len(normalized) > 1 else normalized[0]
     if CONVERT_FILENAME:
         value = value.replace(" ", "_").lower()
 

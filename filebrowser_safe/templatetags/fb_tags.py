@@ -122,7 +122,7 @@ class SelectableNode(template.Node):
             format = ''
         if filetype and format and filetype in SELECT_FORMATS[format]:
             selectable = True
-        elif filetype and format and filetype not in SELECT_FORMATS[format]:
+        elif filetype and format:
             selectable = False
         else:
             selectable = True
